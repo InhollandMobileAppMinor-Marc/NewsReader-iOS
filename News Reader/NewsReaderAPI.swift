@@ -48,7 +48,8 @@ final class NewsReaderAPI : ObservableObject {
     func login(
         username: String,
         password: String,
-        completion: @escaping (Result<LoginResponse, RequestError>) -> Void
+        onSuccess: @escaping () -> Void,
+        onFailure: @escaping (RequestError) -> Void
     ) {
         let url = URL(string: "https://inhollandbackend.azurewebsites.net/api/Users/login")!
         
@@ -80,15 +81,16 @@ final class NewsReaderAPI : ObservableObject {
                 case .failure(let error):
                     switch error {
                     case let urlError as URLError:
-                        completion(.failure(.urlError(urlError)))
+                        onFailure(.urlError(urlError))
                     case let decodingError as DecodingError:
-                        completion(.failure(.decodingError(decodingError)))
+                        onFailure(.decodingError(decodingError))
                     default:
-                        completion(.failure(.genericError(error)))
+                        onFailure(.genericError(error))
                     }
                 }
             }, receiveValue: { (response) in
-                completion(.sccess(response))
+                self.accessToken = response.accessToken
+                onSuccess()
             })
     }
     

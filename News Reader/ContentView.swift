@@ -9,18 +9,35 @@ import SwiftUI
 
 struct ContentView: View {
     @ObservedObject
-    var newsReaderApi = NewsReaderAPI.getInstance()
+    private var newsReaderApi = NewsReaderAPI.getInstance()
+    
+    private var navigationBarItemsWhenLoggedIn: some View {
+        HStack(spacing: 16) {
+            Button(action: {
+                newsReaderApi.logout()
+            }, label: {
+                Image(systemName: "escape")
+            })
+            
+            Button(action: {
+                print("Favorites")
+            }, label: {
+                Image(systemName: "star")
+            })
+        }
+    }
     
     var body: some View {
         VStack {
             if(newsReaderApi.isAuthenticated) {
                 Text("We are logged in")
+                    .navigationBarItems(trailing: navigationBarItemsWhenLoggedIn)
             } else {
                 Text("We need to log in")
                     .navigationBarItems(trailing: NavigationLink(
-                        destination: Text("Login View"),
+                        destination: LoginView(),
                         label: {
-                            Text("Log in")
+                            Image(systemName: "person.crop.circle.fill.badge.plus")
                         }
                     ))
             }
