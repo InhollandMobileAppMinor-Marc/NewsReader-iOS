@@ -22,6 +22,7 @@
 		8BE38A17253C76C2007ECCA3 /* ArticleBatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE38A16253C76C2007ECCA3 /* ArticleBatch.swift */; };
 		8BE38A1B253C7724007ECCA3 /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE38A1A253C7724007ECCA3 /* Article.swift */; };
 		8BE38A1E253C78A9007ECCA3 /* Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE38A1D253C78A9007ECCA3 /* Feed.swift */; };
+		8BEA7620253CB7FC0009C922 /* LoadingStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEA761F253CB7FC0009C922 /* LoadingStatus.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		8BE38A16253C76C2007ECCA3 /* ArticleBatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleBatch.swift; sourceTree = "<group>"; };
 		8BE38A1A253C7724007ECCA3 /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
 		8BE38A1D253C78A9007ECCA3 /* Feed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feed.swift; sourceTree = "<group>"; };
+		8BEA761F253CB7FC0009C922 /* LoadingStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingStatus.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +115,7 @@
 				8B97E0F02537370800372698 /* Assets.xcassets */,
 				8B97E0F52537370800372698 /* Info.plist */,
 				8B97E0F22537370800372698 /* Preview Content */,
+				8BEA761F253CB7FC0009C922 /* LoadingStatus.swift */,
 			);
 			path = "News Reader";
 			sourceTree = "<group>";
@@ -203,6 +206,7 @@
 				8BE38A1B253C7724007ECCA3 /* Article.swift in Sources */,
 				8BE38A1E253C78A9007ECCA3 /* Feed.swift in Sources */,
 				8B97E0FD2537399300372698 /* NewsReaderAPI.swift in Sources */,
+				8BEA7620253CB7FC0009C922 /* LoadingStatus.swift in Sources */,
 				8B3B05232538AE77007D3373 /* LoginView.swift in Sources */,
 				8B97E0EF2537370700372698 /* ContentView.swift in Sources */,
 				8BE38A14253C75F6007ECCA3 /* RegistrationResponse.swift in Sources */,

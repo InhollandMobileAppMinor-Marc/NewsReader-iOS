@@ -12,7 +12,10 @@ struct ContentView: View {
     private var newsReaderApi = NewsReaderAPI.getInstance()
     
     @State
-    var articles: [Article] = []
+    var articleLoadingStatus: LoadingStatus<[Article], RequestError> = .loading
+    
+    @State
+    var images = [Int: Data]()
     
     private var navigationBarItemsWhenLoggedIn: some View {
         HStack(spacing: 16) {
@@ -40,30 +43,62 @@ struct ContentView: View {
     }
     
     var body: some View {
-        VStack {
-            let list = List(articles) { article in
-                Text(article.title)
-                    .padding()
+        let main = VStack {
+            switch articleLoadingStatus {
+            case .loading: ProgressView("Loading articles, please wait...")
+            case .error(let error):
+                switch error {
+                case .urlError: Text("Invalid URL")
+                case .decodingError: Text("Received content is invalid")
+                case .genericError: Text("Unknown error")
+                }
+            case .loaded(let articles): ScrollView {
+                LazyVStack {
+                    ForEach(articles) { article in
+                        NavigationLink(destination: Text(article.summary)) {
+                            Text(article.title)
+                                .font(.body)
+                                .multilineTextAlignment(.leading)
+                                .padding()
+                            
+                            if let image = images[article.id] {
+                                Image(uiImage: UIImage(data: image) ?? UIImage())
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                            }
+                        }.onAppear {
+                            newsReaderApi.getImage(
+                                ofImageUrl: article.image,
+                                onSuccess: { image in
+                                    self.images.updateValue(image, forKey: article.id)
+                                },
+                                onFailure: { error in
+                                    debugPrint(error)
+                                    print("Failure")
+                                }
+                            )
+                        }
+                    }
+                }
             }
-            if(newsReaderApi.isAuthenticated) {
-                list.navigationBarItems(trailing: navigationBarItemsWhenLoggedIn)
-            } else {
-                list.navigationBarItems(trailing: navigationBarItemsWhenLoggedOut)
             }
         }
-        .padding()
         .navigationTitle("News Reader")
         .onAppear {
-            print("Fetching articles")
             newsReaderApi.getArticles(
                 onSuccess: { articleBatch in
-                    print("Articles received \(articleBatch.articles.count)")
-                    self.articles = articleBatch.articles
+                    articleLoadingStatus = .loaded(articleBatch.articles)
                 },
                 onFailure: { error in
-                    print(error)
+                    articleLoadingStatus = .error(error)
                 }
             )
+        }
+        
+        if(newsReaderApi.isAuthenticated) {
+            main.navigationBarItems(trailing: navigationBarItemsWhenLoggedIn)
+        } else {
+            main.navigationBarItems(trailing: navigationBarItemsWhenLoggedOut)
         }
     }
 }

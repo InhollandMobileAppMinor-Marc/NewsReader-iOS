@@ -55,7 +55,6 @@ final class NewsReaderAPI : ObservableObject {
         let url = URL(string: "\(NewsReaderAPI.BASE_URL)/Articles")!
         
         var urlRequest = URLRequest(url: url)
-        urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         if(accessToken != nil) {
             urlRequest.addValue(accessToken!, forHTTPHeaderField: "x-authtoken")
         }
