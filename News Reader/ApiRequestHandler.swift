@@ -13,6 +13,8 @@ final class ApiRequestHandler {
     
     private var cancellable: AnyCancellable?
     
+    private var scheduled: [() -> Void] = []
+    
     private init() {}
     
     static func getInstance() -> ApiRequestHandler {
@@ -26,18 +28,26 @@ final class ApiRequestHandler {
         onSuccess: @escaping (ResponseType) -> Void,
         onFailure: @escaping (RequestError) -> Void
     ) {
-        cancellable = URLSession.shared.dataTaskPublisher(for: request)
-            .map { $0.data }
-            .decode(type: ResponseType.self, decoder: JSONDecoder())
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { (result) in
-                switch result {
-                case .finished: break
-                case .failure(let error): onFailure(ApiRequestHandler.mapErrorToRequestError(error))
+        scheduled.append({
+            self.cancellable = URLSession.shared.dataTaskPublisher(for: request)
+                .map { $0.data }
+                .decode(type: ResponseType.self, decoder: JSONDecoder())
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { (result) in
+                    self.scheduled.removeFirst()
+                    self.scheduled.first?()
+                    switch result {
+                    case .finished: break
+                    case .failure(let error): onFailure(ApiRequestHandler.mapErrorToRequestError(error))
+                    }
+                }) { response in
+                    onSuccess(response)
                 }
-            }) { response in
-                onSuccess(response)
-            }
+        })
+        
+        if(scheduled.count == 1){
+            scheduled.first?()
+        }
     }
     
     func getImage(
@@ -47,17 +57,25 @@ final class ApiRequestHandler {
     ) {
         let urlRequest = URLRequest(url: imageUrl)
         
-        cancellable = URLSession.shared.dataTaskPublisher(for: urlRequest)
-            .map { $0.data }
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { result in
-                switch result {
-                case .finished: break
-                case .failure(let error): onFailure(ApiRequestHandler.mapErrorToRequestError(error))
+        scheduled.append({
+            self.cancellable = URLSession.shared.dataTaskPublisher(for: urlRequest)
+                .map { $0.data }
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { result in
+                    self.scheduled.removeFirst()
+                    self.scheduled.first?()
+                    switch result {
+                    case .finished: break
+                    case .failure(let error): onFailure(ApiRequestHandler.mapErrorToRequestError(error))
+                    }
+                }) { response in
+                    onSuccess(response)
                 }
-            }) { response in
-                onSuccess(response)
-            }
+        })
+        
+        if(scheduled.count == 1){
+            scheduled.first?()
+        }
     }
     
     private static func mapErrorToRequestError(_ error: Error) -> RequestError {
