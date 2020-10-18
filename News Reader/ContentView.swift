@@ -11,6 +11,9 @@ struct ContentView: View {
     @ObservedObject
     private var newsReaderApi = NewsReaderAPI.getInstance()
     
+    @State
+    var articles: [Article] = []
+    
     private var navigationBarItemsWhenLoggedIn: some View {
         HStack(spacing: 16) {
             Button(action: {
@@ -27,21 +30,41 @@ struct ContentView: View {
         }
     }
     
+    private var navigationBarItemsWhenLoggedOut: some View {
+        NavigationLink(
+            destination: LoginView(),
+            label: {
+                Image(systemName: "person.crop.circle.fill.badge.plus")
+            }
+        )
+    }
+    
     var body: some View {
         VStack {
-            if(newsReaderApi.isAuthenticated) {
-                Text("We are logged in")
-                    .navigationBarItems(trailing: navigationBarItemsWhenLoggedIn)
-            } else {
-                Text("We need to log in")
-                    .navigationBarItems(trailing: NavigationLink(
-                        destination: LoginView(),
-                        label: {
-                            Image(systemName: "person.crop.circle.fill.badge.plus")
-                        }
-                    ))
+            let list = List(articles) { article in
+                Text(article.title)
+                    .padding()
             }
-        }.navigationTitle("News Reader")
+            if(newsReaderApi.isAuthenticated) {
+                list.navigationBarItems(trailing: navigationBarItemsWhenLoggedIn)
+            } else {
+                list.navigationBarItems(trailing: navigationBarItemsWhenLoggedOut)
+            }
+        }
+        .padding()
+        .navigationTitle("News Reader")
+        .onAppear {
+            print("Fetching articles")
+            newsReaderApi.getArticles(
+                onSuccess: { articleBatch in
+                    print("Articles received \(articleBatch.articles.count)")
+                    self.articles = articleBatch.articles
+                },
+                onFailure: { error in
+                    print(error)
+                }
+            )
+        }
     }
 }
 
