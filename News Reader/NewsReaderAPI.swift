@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import KeychainAccess
+import SwiftUI
 
 final class NewsReaderAPI : ObservableObject {
     private static var INSTANCE: NewsReaderAPI? = nil
@@ -15,10 +16,10 @@ final class NewsReaderAPI : ObservableObject {
     @Published
     var isAuthenticated = false
     
+    private let apiRequestHandler = ApiRequestHandler.getInstance()
+    
     private let keychain = Keychain()
     private let accessTokenKeychainKey = "accessToken"
-    
-    private var cancellable: AnyCancellable?
     
     var accessToken: String? {
         get {
@@ -71,27 +72,22 @@ final class NewsReaderAPI : ObservableObject {
             return
         }
         
-        cancellable = URLSession.shared.dataTaskPublisher(for: urlRequest)
-            .map { $0.data }
-            .decode(type: LoginResponse.self, decoder: JSONDecoder())
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { (result) in
-                switch result {
-                case .finished: break
-                case .failure(let error):
-                    switch error {
-                    case let urlError as URLError:
-                        onFailure(.urlError(urlError))
-                    case let decodingError as DecodingError:
-                        onFailure(.decodingError(decodingError))
-                    default:
-                        onFailure(.genericError(error))
-                    }
-                }
-            }, receiveValue: { (response) in
+        apiRequestHandler.execute(
+            request: urlRequest,
+            onSuccess: { (response: LoginResponse) in
                 self.accessToken = response.accessToken
                 onSuccess()
-            })
+            },
+            onFailure: onFailure
+        )
+    }
+    
+    func getImage(
+        ofImageUrl imageUrl: URL,
+        onSuccess: @escaping (Data) -> Void,
+        onFailure: @escaping (RequestError) -> Void
+    ) {
+        apiRequestHandler.getImage(ofImageUrl: imageUrl, onSuccess: onSuccess, onFailure: onFailure)
     }
     
     func logout() {

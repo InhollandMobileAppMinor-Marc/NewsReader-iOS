@@ -17,6 +17,7 @@
 		8B97E10525373D4A00372698 /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B97E10425373D4A00372698 /* LoginRequest.swift */; };
 		8B97E10825373FDB00372698 /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B97E10725373FDB00372698 /* LoginResponse.swift */; };
 		8B97E10C2537409600372698 /* RequestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B97E10B2537409600372698 /* RequestError.swift */; };
+		8BD879A4253C674500CE644D /* ApiRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD879A3253C674500CE644D /* ApiRequestHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 		8B97E10425373D4A00372698 /* LoginRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRequest.swift; sourceTree = "<group>"; };
 		8B97E10725373FDB00372698 /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
 		8B97E10B2537409600372698 /* RequestError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestError.swift; sourceTree = "<group>"; };
+		8BD879A3253C674500CE644D /* ApiRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRequestHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +59,9 @@
 		8B2C10BD25399F200013F24F /* API */ = {
 			isa = PBXGroup;
 			children = (
+				8B97E10B2537409600372698 /* RequestError.swift */,
 				8B97E0FC2537399300372698 /* NewsReaderAPI.swift */,
+				8BD879A3253C674500CE644D /* ApiRequestHandler.swift */,
 			);
 			name = API;
 			sourceTree = "<group>";
@@ -94,7 +98,6 @@
 				8B2C10BD25399F200013F24F /* API */,
 				8B2C10BC25399F100013F24F /* Models */,
 				8B97E0EC2537370700372698 /* NewsReaderApp.swift */,
-				8B97E10B2537409600372698 /* RequestError.swift */,
 				8B97E0F02537370800372698 /* Assets.xcassets */,
 				8B97E0F52537370800372698 /* Info.plist */,
 				8B97E0F22537370800372698 /* Preview Content */,
@@ -188,6 +191,7 @@
 				8B97E0FD2537399300372698 /* NewsReaderAPI.swift in Sources */,
 				8B3B05232538AE77007D3373 /* LoginView.swift in Sources */,
 				8B97E0EF2537370700372698 /* ContentView.swift in Sources */,
+				8BD879A4253C674500CE644D /* ApiRequestHandler.swift in Sources */,
 				8B97E10C2537409600372698 /* RequestError.swift in Sources */,
 				8B97E0ED2537370700372698 /* NewsReaderApp.swift in Sources */,
 				8B97E10525373D4A00372698 /* LoginRequest.swift in Sources */,
