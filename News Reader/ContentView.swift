@@ -14,9 +14,6 @@ struct ContentView: View {
     @State
     var articleLoadingStatus: LoadingStatus<[Article], RequestError> = .loading
     
-    @State
-    var images = [Int: Data]()
-    
     private var navigationBarItemsWhenLoggedIn: some View {
         HStack(spacing: 16) {
             Button(action: {
@@ -55,29 +52,7 @@ struct ContentView: View {
             case .loaded(let articles): ScrollView {
                 LazyVStack {
                     ForEach(articles) { article in
-                        NavigationLink(destination: Text(article.summary)) {
-                            Text(article.title)
-                                .font(.body)
-                                .multilineTextAlignment(.leading)
-                                .padding()
-                            
-                            if let image = images[article.id] {
-                                Image(uiImage: UIImage(data: image) ?? UIImage())
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                            }
-                        }.onAppear {
-                            newsReaderApi.getImage(
-                                ofImageUrl: article.image,
-                                onSuccess: { image in
-                                    self.images.updateValue(image, forKey: article.id)
-                                },
-                                onFailure: { error in
-                                    debugPrint(error)
-                                    print("Failure")
-                                }
-                            )
-                        }
+                        ArticleListItem(article: article)
                     }
                 }
             }

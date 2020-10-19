@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B16BFBE253E19C000065EAE /* ArticleListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B16BFBD253E19C000065EAE /* ArticleListItem.swift */; };
 		8B3B05232538AE77007D3373 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3B05222538AE77007D3373 /* LoginView.swift */; };
 		8B97E0ED2537370700372698 /* NewsReaderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B97E0EC2537370700372698 /* NewsReaderApp.swift */; };
 		8B97E0EF2537370700372698 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B97E0EE2537370700372698 /* ContentView.swift */; };
@@ -26,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8B16BFBD253E19C000065EAE /* ArticleListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleListItem.swift; sourceTree = "<group>"; };
 		8B3B05222538AE77007D3373 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		8B97E0E92537370700372698 /* News Reader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "News Reader.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B97E0EC2537370700372698 /* NewsReaderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsReaderApp.swift; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 			children = (
 				8B97E0EE2537370700372698 /* ContentView.swift */,
 				8B3B05222538AE77007D3373 /* LoginView.swift */,
+				8B16BFBD253E19C000065EAE /* ArticleListItem.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -212,6 +215,7 @@
 				8BE38A14253C75F6007ECCA3 /* RegistrationResponse.swift in Sources */,
 				8BD879A4253C674500CE644D /* ApiRequestHandler.swift in Sources */,
 				8BE38A17253C76C2007ECCA3 /* ArticleBatch.swift in Sources */,
+				8B16BFBE253E19C000065EAE /* ArticleListItem.swift in Sources */,
 				8B97E10C2537409600372698 /* RequestError.swift in Sources */,
 				8B97E0ED2537370700372698 /* NewsReaderApp.swift in Sources */,
 				8B97E10525373D4A00372698 /* UserCredentials.swift in Sources */,
