@@ -9,20 +9,17 @@ import Foundation
 import Combine
 import KeychainAccess
 
-final class NewsReaderAPI : ObservableObject {
-    private static var INSTANCE: NewsReaderAPI? = nil
+final class NewsReaderApiImpl : NewsReaderApi {
+    private static var INSTANCE: NewsReaderApiImpl? = nil
     
     private static let BASE_URL = "https://inhollandbackend.azurewebsites.net/api"
-    
-    @Published
-    var isAuthenticated = false
     
     private let apiRequestHandler = ApiRequestHandler.getInstance()
     
     private let keychain = Keychain()
     private let accessTokenKeychainKey = "accessToken"
     
-    var accessToken: String? {
+    private var accessToken: String? {
         get {
             try? keychain.get(accessTokenKeychainKey)
         }
@@ -37,22 +34,23 @@ final class NewsReaderAPI : ObservableObject {
         }
     }
     
-    private init() {
+    override private init() {
+        super.init()
         isAuthenticated = accessToken != nil
     }
     
-    static func getInstance() -> NewsReaderAPI {
-        let instance = self.INSTANCE ?? NewsReaderAPI()
+    static func getInstance() -> NewsReaderApi {
+        let instance = self.INSTANCE ?? NewsReaderApiImpl()
         self.INSTANCE = instance
         return instance
     }
     
-    func getArticles(
+    override func getArticles(
         count: Int = 20,
         onSuccess: @escaping (ArticleBatch) -> Void,
         onFailure: @escaping (RequestError) -> Void
     ) {
-        let url = URL(string: "\(NewsReaderAPI.BASE_URL)/Articles")!
+        let url = URL(string: "\(NewsReaderApiImpl.BASE_URL)/Articles")!
         
         var urlRequest = URLRequest(url: url)
         if(accessToken != nil) {
@@ -66,13 +64,13 @@ final class NewsReaderAPI : ObservableObject {
         )
     }
     
-    func login(
+    override func login(
         username: String,
         password: String,
         onSuccess: @escaping () -> Void,
         onFailure: @escaping (RequestError) -> Void
     ) {
-        let url = URL(string: "\(NewsReaderAPI.BASE_URL)/Users/login")!
+        let url = URL(string: "\(NewsReaderApiImpl.BASE_URL)/Users/login")!
         
         var urlRequest = URLRequest(url: url)
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -102,7 +100,7 @@ final class NewsReaderAPI : ObservableObject {
         )
     }
     
-    func getImage(
+    override func getImage(
         ofImageUrl imageUrl: URL,
         onSuccess: @escaping (Data) -> Void,
         onFailure: @escaping (RequestError) -> Void
@@ -110,7 +108,7 @@ final class NewsReaderAPI : ObservableObject {
         apiRequestHandler.getImage(ofImageUrl: imageUrl, onSuccess: onSuccess, onFailure: onFailure)
     }
     
-    func logout() {
+    override func logout() {
         accessToken = nil
     }
 }

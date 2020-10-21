@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @ObservedObject
-    private var newsReaderApi = NewsReaderAPI.getInstance()
+    var newsReaderApi: NewsReaderApi = NewsReaderApiImpl.getInstance()
     
     @State
     var articleLoadingStatus: LoadingStatus<[Article], RequestError> = .loading
@@ -52,7 +52,7 @@ struct ContentView: View {
             case .loaded(let articles): ScrollView {
                 LazyVStack {
                     ForEach(articles) { article in
-                        ArticleListItem(article: article)
+                        ArticleListItem(article)
                     }
                 }
             }
@@ -81,7 +81,7 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ContentView()
+            ContentView(newsReaderApi: FakeNewsReaderApi.getInstance())
         }
     }
 }

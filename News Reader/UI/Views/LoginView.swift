@@ -35,7 +35,7 @@ struct LoginView: View {
                     .cornerRadius(3.0)
                 Button(action: {
                     isLoading = true
-                    NewsReaderAPI.getInstance().login(
+                    NewsReaderApiImpl.getInstance().login(
                         username: username,
                         password: password,
                         onSuccess: {

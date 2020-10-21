@@ -8,9 +8,17 @@
 import SwiftUI
 
 struct ArticleListItem: View {
-    private let newsReaderApi = NewsReaderAPI.getInstance()
+    let newsReaderApi: NewsReaderApi
     
     let article: Article
+    
+    init(
+        _ article: Article,
+        api: NewsReaderApi = NewsReaderApiImpl.getInstance()
+    ) {
+        self.article = article
+        self.newsReaderApi = api
+    }
     
     @State
     var imageLoadingStatus: LoadingStatus<Data, RequestError> = .loading
@@ -47,18 +55,10 @@ struct ArticleListItem: View {
 struct ArticleListItem_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ArticleListItem(article: Article(
-                id: 1,
-                feed: 1,
-                title: "Hello world!",
-                summary: "Lorem ipsum",
-                publishDate: "2020-10-19T12:00",
-                image: URL(string: "https://marketplace.canva.com/MAB_ajIqclg/1/0/thumbnail_large/canva-hello-world-instagram-post-MAB_ajIqclg.jpg")!,
-                url: URL(string: "https://example.com/")!,
-                related: [],
-                categories: [],
-                isLiked: false
-            ))
+            ArticleListItem(
+                FakeNewsReaderApi.article,
+                api: FakeNewsReaderApi.getInstance()
+            )
         }
     }
 }
