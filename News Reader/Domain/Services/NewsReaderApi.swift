@@ -26,6 +26,13 @@ class NewsReaderApi : ObservableObject {
         onFailure: @escaping (RequestError) -> Void
     ) {}
     
+    func register(
+        username: String,
+        password: String,
+        onSuccess: @escaping () -> Void,
+        onFailure: @escaping (RequestError) -> Void
+    ) {}
+    
     func getImage(
         ofImageUrl imageUrl: URL,
         onSuccess: @escaping (Data) -> Void,

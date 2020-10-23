@@ -54,6 +54,16 @@ final class FakeNewsReaderApi : NewsReaderApi {
         onSuccess()
     }
     
+    override func register(
+        username: String,
+        password: String,
+        onSuccess: @escaping () -> Void,
+        onFailure: @escaping (RequestError) -> Void
+    ) {
+        isAuthenticated = true
+        onSuccess()
+    }
+    
     override func getImage(
         ofImageUrl imageUrl: URL,
         onSuccess: @escaping (Data) -> Void,

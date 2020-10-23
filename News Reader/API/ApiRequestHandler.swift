@@ -29,6 +29,7 @@ final class ApiRequestHandler {
         onFailure: @escaping (RequestError) -> Void
     ) {
         scheduled.append({
+            [unowned self] in
             self.cancellable = URLSession.shared.dataTaskPublisher(for: request)
                 .map { $0.data }
                 .decode(type: ResponseType.self, decoder: JSONDecoder())
@@ -58,6 +59,7 @@ final class ApiRequestHandler {
         let urlRequest = URLRequest(url: imageUrl)
         
         scheduled.append({
+            [unowned self] in
             self.cancellable = URLSession.shared.dataTaskPublisher(for: urlRequest)
                 .map { $0.data }
                 .receive(on: DispatchQueue.main)

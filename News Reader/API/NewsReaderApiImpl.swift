@@ -100,6 +100,45 @@ final class NewsReaderApiImpl : NewsReaderApi {
         )
     }
     
+    override func register(
+        username: String,
+        password: String,
+        onSuccess: @escaping () -> Void,
+        onFailure: @escaping (RequestError) -> Void
+    ) {
+        let url = URL(string: "\(NewsReaderApiImpl.BASE_URL)/Users/register")!
+        
+        var urlRequest = URLRequest(url: url)
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        urlRequest.httpMethod = "POST"
+        
+        let parameters = UserCredentials(
+            username: username,
+            password: password
+        )
+        
+        let encoder = JSONEncoder()
+        let body = try? encoder.encode(parameters)
+        
+        if(body != nil) {
+            urlRequest.httpBody = body
+        } else {
+            return
+        }
+        
+        apiRequestHandler.execute(
+            request: urlRequest,
+            onSuccess: { (response: RegistrationResponse) in
+                if(response.success) {
+                    self.login(username: username, password: password, onSuccess: onSuccess, onFailure: onFailure)
+                } else {
+                    onFailure(.genericError(ApiError(message: response.message)))
+                }
+            },
+            onFailure: onFailure
+        )
+    }
+    
     override func getImage(
         ofImageUrl imageUrl: URL,
         onSuccess: @escaping (Data) -> Void,
