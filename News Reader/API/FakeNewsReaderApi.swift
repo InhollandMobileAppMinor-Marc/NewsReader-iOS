@@ -34,12 +34,12 @@ final class FakeNewsReaderApi : NewsReaderApi {
     }
     
     override func getArticles(
-        count: Int = 20,
+        onlyLikedArticles: Bool = false,
         onSuccess: @escaping (ArticleBatch) -> Void,
         onFailure: @escaping (RequestError) -> Void
     ) {
         onSuccess(ArticleBatch(
-            articles: [FakeNewsReaderApi.article],
+            articles: (!onlyLikedArticles || FakeNewsReaderApi.article.isLiked ? [FakeNewsReaderApi.article] : []),
             nextId: nil
         ))
     }

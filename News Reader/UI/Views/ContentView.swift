@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State
+    var favouritesOnly = false
+    
     @ObservedObject
     var newsReaderApi: NewsReaderApi = NewsReaderApiImpl.getInstance()
     
@@ -22,11 +25,15 @@ struct ContentView: View {
                 Image(systemName: "escape")
             })
             
-            Button(action: {
-                print("Favorites")
-            }, label: {
-                Image(systemName: "star")
-            })
+            NavigationLink(
+                destination: ContentView(
+                    favouritesOnly: true,
+                    newsReaderApi: newsReaderApi
+                ),
+                label: {
+                    Image(systemName: "star")
+                }
+            )
         }
     }
     
@@ -58,9 +65,10 @@ struct ContentView: View {
             }
             }
         }
-        .navigationTitle("News Reader")
+        .navigationTitle(favouritesOnly ? "Favourites" : "673915 - News Reader")
         .onAppear {
             newsReaderApi.getArticles(
+                onlyLikedArticles: favouritesOnly,
                 onSuccess: { articleBatch in
                     articleLoadingStatus = .loaded(articleBatch.articles)
                 },

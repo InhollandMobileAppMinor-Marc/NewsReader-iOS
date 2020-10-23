@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Abstract class
 class NewsReaderApi : ObservableObject {
     @Published
     var isAuthenticated = false
@@ -14,7 +15,7 @@ class NewsReaderApi : ObservableObject {
     internal init() {}
     
     func getArticles(
-        count: Int = 20,
+        onlyLikedArticles: Bool = false,
         onSuccess: @escaping (ArticleBatch) -> Void,
         onFailure: @escaping (RequestError) -> Void
     ) {}

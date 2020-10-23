@@ -24,12 +24,12 @@ final class NewsReaderApiImpl : NewsReaderApi {
             try? keychain.get(accessTokenKeychainKey)
         }
         set(newValue) {
-            if(newValue == nil) {
+            if let value = newValue {
+                try? keychain.set(value, key: accessTokenKeychainKey)
+                isAuthenticated = true
+            } else {
                 try? keychain.remove(accessTokenKeychainKey)
                 isAuthenticated = false
-            } else {
-                try? keychain.set(newValue!, key: accessTokenKeychainKey)
-                isAuthenticated = true
             }
         }
     }
@@ -46,15 +46,19 @@ final class NewsReaderApiImpl : NewsReaderApi {
     }
     
     override func getArticles(
-        count: Int = 20,
+        onlyLikedArticles: Bool = false,
         onSuccess: @escaping (ArticleBatch) -> Void,
         onFailure: @escaping (RequestError) -> Void
     ) {
-        let url = URL(string: "\(NewsReaderApiImpl.BASE_URL)/Articles")!
+        let url = URL(string: "\(NewsReaderApiImpl.BASE_URL)/Articles" + (onlyLikedArticles ? "/liked" : ""))!
         
         var urlRequest = URLRequest(url: url)
         if(accessToken != nil) {
             urlRequest.addValue(accessToken!, forHTTPHeaderField: "x-authtoken")
+        } else if(onlyLikedArticles) {
+            /// Logged out users don't have any liked articles, so return an empty list
+            onSuccess(ArticleBatch(articles: [], nextId: nil))
+            return
         }
         
         apiRequestHandler.execute(
