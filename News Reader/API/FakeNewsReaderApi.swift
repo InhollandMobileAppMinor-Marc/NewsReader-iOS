@@ -1,15 +1,8 @@
-//
-//  FakeNewsReaderApi.swift
-//  News Reader
-//
-//  Created by user180963 on 21/10/2020.
-//
-
 import Foundation
 
 final class FakeNewsReaderApi : NewsReaderApi {
     private static var INSTANCE: FakeNewsReaderApi? = nil
-    
+
     static var article = Article(
         id: 1,
         feed: 1,
@@ -22,17 +15,17 @@ final class FakeNewsReaderApi : NewsReaderApi {
         categories: [],
         isLiked: false
     )
-    
+
     override private init() {
         super.init()
     }
-    
+
     static func getInstance() -> NewsReaderApi {
         let instance = self.INSTANCE ?? FakeNewsReaderApi()
         self.INSTANCE = instance
         return instance
     }
-    
+
     override func getArticles(
         onlyLikedArticles: Bool = false,
         onSuccess: @escaping (ArticleBatch) -> Void,
@@ -43,7 +36,7 @@ final class FakeNewsReaderApi : NewsReaderApi {
             nextId: nil
         ))
     }
-    
+
     override func login(
         username: String,
         password: String,
@@ -53,7 +46,7 @@ final class FakeNewsReaderApi : NewsReaderApi {
         isAuthenticated = true
         onSuccess()
     }
-    
+
     override func register(
         username: String,
         password: String,
@@ -63,7 +56,7 @@ final class FakeNewsReaderApi : NewsReaderApi {
         isAuthenticated = true
         onSuccess()
     }
-    
+
     override func getImage(
         ofImageUrl imageUrl: URL,
         onSuccess: @escaping (Data) -> Void,
@@ -71,7 +64,7 @@ final class FakeNewsReaderApi : NewsReaderApi {
     ) {
         // N/A
     }
-    
+
     override func logout() {
         isAuthenticated = false
     }

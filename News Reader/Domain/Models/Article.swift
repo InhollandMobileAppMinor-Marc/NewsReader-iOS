@@ -1,10 +1,3 @@
-//
-//  Article.swift
-//  News Reader
-//
-//  Created by user180963 on 10/18/20.
-//
-
 import Foundation
 
 struct Article : Decodable, Identifiable {
@@ -18,7 +11,7 @@ struct Article : Decodable, Identifiable {
     let related: [URL]
     let categories: [Feed]
     let isLiked: Bool
-    
+
     enum CodingKeys : String, CodingKey {
         case id = "Id"
         case feed = "Feed"

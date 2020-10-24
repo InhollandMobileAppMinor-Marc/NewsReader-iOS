@@ -1,24 +1,17 @@
-//
-//  NewsReaderAPI.swift
-//  News Reader
-//
-//  Created by user180963 on 10/14/20.
-//
-
 import Foundation
 import Combine
 import KeychainAccess
 
 final class NewsReaderApiImpl : NewsReaderApi {
     private static var INSTANCE: NewsReaderApiImpl? = nil
-    
+
     private static let BASE_URL = "https://inhollandbackend.azurewebsites.net/api"
-    
+
     private let apiRequestHandler = ApiRequestHandler.getInstance()
-    
+
     private let keychain = Keychain()
     private let accessTokenKeychainKey = "accessToken"
-    
+
     private var accessToken: String? {
         get {
             try? keychain.get(accessTokenKeychainKey)
@@ -33,25 +26,25 @@ final class NewsReaderApiImpl : NewsReaderApi {
             }
         }
     }
-    
+
     override private init() {
         super.init()
         isAuthenticated = accessToken != nil
     }
-    
+
     static func getInstance() -> NewsReaderApi {
         let instance = self.INSTANCE ?? NewsReaderApiImpl()
         self.INSTANCE = instance
         return instance
     }
-    
+
     override func getArticles(
         onlyLikedArticles: Bool = false,
         onSuccess: @escaping (ArticleBatch) -> Void,
         onFailure: @escaping (RequestError) -> Void
     ) {
         let url = URL(string: "\(NewsReaderApiImpl.BASE_URL)/Articles" + (onlyLikedArticles ? "/liked" : ""))!
-        
+
         var urlRequest = URLRequest(url: url)
         if(accessToken != nil) {
             urlRequest.addValue(accessToken!, forHTTPHeaderField: "x-authtoken")
@@ -60,14 +53,14 @@ final class NewsReaderApiImpl : NewsReaderApi {
             onSuccess(ArticleBatch(articles: [], nextId: nil))
             return
         }
-        
+
         apiRequestHandler.execute(
             request: urlRequest,
             onSuccess: onSuccess,
             onFailure: onFailure
         )
     }
-    
+
     override func login(
         username: String,
         password: String,
@@ -75,25 +68,25 @@ final class NewsReaderApiImpl : NewsReaderApi {
         onFailure: @escaping (RequestError) -> Void
     ) {
         let url = URL(string: "\(NewsReaderApiImpl.BASE_URL)/Users/login")!
-        
+
         var urlRequest = URLRequest(url: url)
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.httpMethod = "POST"
-        
+
         let parameters = UserCredentials(
             username: username,
             password: password
         )
-        
+
         let encoder = JSONEncoder()
         let body = try? encoder.encode(parameters)
-        
+
         if(body != nil) {
             urlRequest.httpBody = body
         } else {
             return
         }
-        
+
         apiRequestHandler.execute(
             request: urlRequest,
             onSuccess: { (response: LoginResponse) in
@@ -103,7 +96,7 @@ final class NewsReaderApiImpl : NewsReaderApi {
             onFailure: onFailure
         )
     }
-    
+
     override func register(
         username: String,
         password: String,
@@ -111,25 +104,25 @@ final class NewsReaderApiImpl : NewsReaderApi {
         onFailure: @escaping (RequestError) -> Void
     ) {
         let url = URL(string: "\(NewsReaderApiImpl.BASE_URL)/Users/register")!
-        
+
         var urlRequest = URLRequest(url: url)
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.httpMethod = "POST"
-        
+
         let parameters = UserCredentials(
             username: username,
             password: password
         )
-        
+
         let encoder = JSONEncoder()
         let body = try? encoder.encode(parameters)
-        
+
         if(body != nil) {
             urlRequest.httpBody = body
         } else {
             return
         }
-        
+
         apiRequestHandler.execute(
             request: urlRequest,
             onSuccess: { (response: RegistrationResponse) in
@@ -142,7 +135,7 @@ final class NewsReaderApiImpl : NewsReaderApi {
             onFailure: onFailure
         )
     }
-    
+
     override func getImage(
         ofImageUrl imageUrl: URL,
         onSuccess: @escaping (Data) -> Void,
@@ -150,7 +143,7 @@ final class NewsReaderApiImpl : NewsReaderApi {
     ) {
         apiRequestHandler.getImage(ofImageUrl: imageUrl, onSuccess: onSuccess, onFailure: onFailure)
     }
-    
+
     override func logout() {
         accessToken = nil
     }

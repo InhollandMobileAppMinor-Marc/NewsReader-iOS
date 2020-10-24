@@ -1,28 +1,21 @@
-//
-//  ApiRequestHandler.swift
-//  News Reader
-//
-//  Created by user180963 on 10/18/20.
-//
-
 import Foundation
 import Combine
 
 final class ApiRequestHandler {
     private static var INSTANCE: ApiRequestHandler? = nil
-    
+
     private var cancellable: AnyCancellable?
-    
+
     private var scheduled: [() -> Void] = []
-    
+
     private init() {}
-    
+
     static func getInstance() -> ApiRequestHandler {
         let instance = self.INSTANCE ?? ApiRequestHandler()
         self.INSTANCE = instance
         return instance
     }
-    
+
     func execute<ResponseType : Decodable>(
         request: URLRequest,
         onSuccess: @escaping (ResponseType) -> Void,
@@ -45,19 +38,19 @@ final class ApiRequestHandler {
                     onSuccess(response)
                 }
         })
-        
+
         if(scheduled.count == 1){
             scheduled.first?()
         }
     }
-    
+
     func getImage(
         ofImageUrl imageUrl: URL,
         onSuccess: @escaping (Data) -> Void,
         onFailure: @escaping (RequestError) -> Void
     ) {
         let urlRequest = URLRequest(url: imageUrl)
-        
+
         scheduled.append({
             [unowned self] in
             self.cancellable = URLSession.shared.dataTaskPublisher(for: urlRequest)
@@ -74,12 +67,12 @@ final class ApiRequestHandler {
                     onSuccess(response)
                 }
         })
-        
+
         if(scheduled.count == 1){
             scheduled.first?()
         }
     }
-    
+
     private static func mapErrorToRequestError(_ error: Error) -> RequestError {
         switch error {
         case let urlError as URLError:
