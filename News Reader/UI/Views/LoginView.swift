@@ -1,27 +1,56 @@
+//
+//  LoginView.swift
+//  News Reader
+//
+//  Created by user180963 on 10/15/20.
+//
+
 import SwiftUI
 
 struct LoginView: View {
-    @ObservedObject
-    var viewModel = LoginViewModel()
-
+    var newsReaderApi: NewsReaderApi = NewsReaderApiImpl.getInstance()
+    
+    @Environment(\.presentationMode)
+    var presentationMode: Binding<PresentationMode>
+    
+    @State
+    var username = ""
+    
+    @State
+    var password = ""
+    
+    @State
+    var isLoading = false
+    
     var body: some View {
         VStack {
-            if(viewModel.isLoading) {
+            if(isLoading) {
                 ProgressView("Trying to login...")
             } else {
-                TextField("Enter username", text: $viewModel.username)
+                TextField("Enter username", text: $username)
                     .padding()
                     .border(Color.black.opacity(0.2), width: 1)
                     .cornerRadius(3.0)
-
-                SecureField("Enter password", text: $viewModel.password)
+                
+                SecureField("Enter password", text: $password)
                     .padding()
                     .border(Color.black.opacity(0.2), width: 1)
                     .cornerRadius(3.0)
-
+                
                 HStack {
                     Button(action: {
-                        viewModel.register()
+                        isLoading = true
+                        newsReaderApi.register(
+                            username: username,
+                            password: password,
+                            onSuccess: {
+                                isLoading = false
+                                self.presentationMode.wrappedValue.dismiss()
+                            },
+                            onFailure: { (error) in
+                                isLoading = false
+                                print(error)
+                            })
                     }, label: {
                         Text("Register")
                             .frame(maxWidth: .infinity, minHeight: 44)
@@ -30,9 +59,20 @@ struct LoginView: View {
                     .background(Color.white)
                     .cornerRadius(8.0)
                     .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.blue, lineWidth: 2.0))
-
+                    
                     Button(action: {
-                        viewModel.login()
+                        isLoading = true
+                        newsReaderApi.login(
+                            username: username,
+                            password: password,
+                            onSuccess: {
+                                isLoading = false
+                                self.presentationMode.wrappedValue.dismiss()
+                            },
+                            onFailure: { (error) in
+                                isLoading = false
+                                print(error)
+                            })
                     }, label: {
                         Text("Login")
                             .frame(maxWidth: .infinity, minHeight: 44)
@@ -51,7 +91,7 @@ struct LoginView: View {
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            LoginView(viewModel: LoginViewModel(api: FakeNewsReaderApi.getInstance()))
+            LoginView(newsReaderApi: FakeNewsReaderApi.getInstance())
         }
     }
 }

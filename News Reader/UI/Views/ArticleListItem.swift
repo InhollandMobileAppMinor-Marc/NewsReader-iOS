@@ -1,24 +1,36 @@
+//
+//  ArticleListItem.swift
+//  News Reader
+//
+//  Created by user180963 on 19/10/2020.
+//
+
 import SwiftUI
 
 struct ArticleListItem: View {
-    @ObservedObject
-    var articleListItemViewModel
-
+    let newsReaderApi: NewsReaderApi
+    
+    let article: Article
+    
     init(
         _ article: Article,
         api: NewsReaderApi = NewsReaderApiImpl.getInstance()
     ) {
-        articleListItemViewModel = ArticleListItemViewModel(article, api: api)
+        self.article = article
+        self.newsReaderApi = api
     }
-
+    
+    @State
+    var imageLoadingStatus: LoadingStatus<Data, RequestError> = .loading
+    
     var body: some View {
-        NavigationLink(destination: Text(articleListItemViewModel.article.summary)) {
-            Text(articleListItemViewModel.article.title)
+        NavigationLink(destination: Text(article.summary)) {
+            Text(article.title)
                 .font(.body)
                 .multilineTextAlignment(.leading)
                 .padding()
-
-            switch articleListItemViewModel.imageLoadingStatus {
+            
+            switch imageLoadingStatus {
             case .loaded(let image): Image(uiImage: UIImage(data: image) ?? UIImage())
                 .resizable()
                 .aspectRatio(contentMode: .fit)
@@ -26,7 +38,16 @@ struct ArticleListItem: View {
                 Image(systemName: "photo")
             }
         }.onAppear {
-            articleListItemViewModel.loadImage()
+            newsReaderApi.getImage(
+                ofImageUrl: article.image,
+                onSuccess: { image in
+                    self.imageLoadingStatus = .loaded(image)
+                },
+                onFailure: { error in
+                    debugPrint(error)
+                    print("Failure")
+                }
+            )
         }
     }
 }

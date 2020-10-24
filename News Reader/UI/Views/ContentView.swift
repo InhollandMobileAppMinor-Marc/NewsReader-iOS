@@ -1,23 +1,34 @@
+//
+//  ContentView.swift
+//  News Reader
+//
+//  Created by user180963 on 10/14/20.
+//
+
 import SwiftUI
 
-struct ArticleOverviewView: View {
+struct ContentView: View {
+    @State
+    var favouritesOnly = false
+    
     @ObservedObject
-    var articleOverviewViewModel = ArticleOverviewViewModel()
-
+    var newsReaderApi: NewsReaderApi = NewsReaderApiImpl.getInstance()
+    
+    @State
+    var articleLoadingStatus: LoadingStatus<[Article], RequestError> = .loading
+    
     private var navigationBarItemsWhenLoggedIn: some View {
         HStack(spacing: 16) {
             Button(action: {
-                articleOverviewViewModel.logout()
+                newsReaderApi.logout()
             }, label: {
                 Image(systemName: "escape")
             })
-
+            
             NavigationLink(
-                destination: ArticleOverviewView(
-                    articleOverviewViewModel: ArticleOverviewViewModel(
-                        favouritesOnly: true,
-                        api: articleOverviewViewModel.newsReaderApi
-                    )
+                destination: ContentView(
+                    favouritesOnly: true,
+                    newsReaderApi: newsReaderApi
                 ),
                 label: {
                     Image(systemName: "star")
@@ -25,7 +36,7 @@ struct ArticleOverviewView: View {
             )
         }
     }
-
+    
     private var navigationBarItemsWhenLoggedOut: some View {
         NavigationLink(
             destination: LoginView(),
@@ -34,10 +45,10 @@ struct ArticleOverviewView: View {
             }
         )
     }
-
+    
     var body: some View {
         let main = VStack {
-            switch articleOverviewViewModel.articleLoadingStatus {
+            switch articleLoadingStatus {
             case .loading: ProgressView("Loading articles, please wait...")
             case .error(let error):
                 switch error {
@@ -54,12 +65,20 @@ struct ArticleOverviewView: View {
             }
             }
         }
-        .navigationTitle(articleOverviewViewModel.favouritesOnly ? "Favourites" : "673915 - News Reader")
+        .navigationTitle(favouritesOnly ? "Favourites" : "673915 - News Reader")
         .onAppear {
-            articleOverviewViewModel.loadArticles()
+            newsReaderApi.getArticles(
+                onlyLikedArticles: favouritesOnly,
+                onSuccess: { articleBatch in
+                    articleLoadingStatus = .loaded(articleBatch.articles)
+                },
+                onFailure: { error in
+                    articleLoadingStatus = .error(error)
+                }
+            )
         }
-
-        if(articleOverviewViewModel.isAuthenticated) {
+        
+        if(newsReaderApi.isAuthenticated) {
             main.navigationBarItems(trailing: navigationBarItemsWhenLoggedIn)
         } else {
             main.navigationBarItems(trailing: navigationBarItemsWhenLoggedOut)
@@ -67,15 +86,10 @@ struct ArticleOverviewView: View {
     }
 }
 
-struct ArticleOverviewView_Previews: PreviewProvider {
+struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ArticleOverviewView(
-                articleOverviewViewModel: ArticleOverviewViewModel(
-                    favouritesOnly: false,
-                    api: FakeNewsReaderApi.getInstance()
-                )
-            )
+            ContentView(newsReaderApi: FakeNewsReaderApi.getInstance())
         }
     }
 }
