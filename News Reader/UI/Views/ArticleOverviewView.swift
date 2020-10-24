@@ -1,34 +1,23 @@
-//
-//  ContentView.swift
-//  News Reader
-//
-//  Created by user180963 on 10/14/20.
-//
-
 import SwiftUI
 
-struct ContentView: View {
-    @State
-    var favouritesOnly = false
-    
+struct ArticleOverviewView: View {
     @ObservedObject
-    var newsReaderApi: NewsReaderApi = NewsReaderApiImpl.getInstance()
-    
-    @State
-    var articleLoadingStatus: LoadingStatus<[Article], RequestError> = .loading
-    
+    var articleOverviewViewModel = ArticleOverviewViewModel()
+
     private var navigationBarItemsWhenLoggedIn: some View {
         HStack(spacing: 16) {
             Button(action: {
-                newsReaderApi.logout()
+                articleOverviewViewModel.logout()
             }, label: {
                 Image(systemName: "escape")
             })
-            
+
             NavigationLink(
-                destination: ContentView(
-                    favouritesOnly: true,
-                    newsReaderApi: newsReaderApi
+                destination: ArticleOverviewView(
+                    articleOverviewViewModel: ArticleOverviewViewModel(
+                        favouritesOnly: true,
+                        api: articleOverviewViewModel.newsReaderApi
+                    )
                 ),
                 label: {
                     Image(systemName: "star")
@@ -36,7 +25,7 @@ struct ContentView: View {
             )
         }
     }
-    
+
     private var navigationBarItemsWhenLoggedOut: some View {
         NavigationLink(
             destination: LoginView(),
@@ -45,10 +34,10 @@ struct ContentView: View {
             }
         )
     }
-    
+
     var body: some View {
         let main = VStack {
-            switch articleLoadingStatus {
+            switch articleOverviewViewModel.articleLoadingStatus {
             case .loading: ProgressView("Loading articles, please wait...")
             case .error(let error):
                 switch error {
@@ -65,20 +54,12 @@ struct ContentView: View {
             }
             }
         }
-        .navigationTitle(favouritesOnly ? "Favourites" : "673915 - News Reader")
+        .navigationTitle(articleOverviewViewModel.favouritesOnly ? "Favourites" : "673915 - News Reader")
         .onAppear {
-            newsReaderApi.getArticles(
-                onlyLikedArticles: favouritesOnly,
-                onSuccess: { articleBatch in
-                    articleLoadingStatus = .loaded(articleBatch.articles)
-                },
-                onFailure: { error in
-                    articleLoadingStatus = .error(error)
-                }
-            )
+            articleOverviewViewModel.loadArticles()
         }
-        
-        if(newsReaderApi.isAuthenticated) {
+
+        if(articleOverviewViewModel.isAuthenticated) {
             main.navigationBarItems(trailing: navigationBarItemsWhenLoggedIn)
         } else {
             main.navigationBarItems(trailing: navigationBarItemsWhenLoggedOut)
@@ -86,10 +67,15 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct ArticleOverviewView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ContentView(newsReaderApi: FakeNewsReaderApi.getInstance())
+            ArticleOverviewView(
+                articleOverviewViewModel: ArticleOverviewViewModel(
+                    favouritesOnly: false,
+                    api: FakeNewsReaderApi.getInstance()
+                )
+            )
         }
     }
 }
