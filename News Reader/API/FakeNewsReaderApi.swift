@@ -13,7 +13,7 @@ final class FakeNewsReaderApi : NewsReaderApi {
         url: URL(string: "https://example.com/")!,
         related: [],
         categories: [],
-        isLiked: false
+        isLiked: true
     )
 
     override private init() {

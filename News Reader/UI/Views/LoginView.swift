@@ -1,10 +1,3 @@
-//
-//  LoginView.swift
-//  News Reader
-//
-//  Created by user180963 on 10/15/20.
-//
-
 import SwiftUI
 
 struct LoginView: View {
@@ -39,18 +32,7 @@ struct LoginView: View {
                 
                 HStack {
                     Button(action: {
-                        isLoading = true
-                        newsReaderApi.register(
-                            username: username,
-                            password: password,
-                            onSuccess: {
-                                isLoading = false
-                                self.presentationMode.wrappedValue.dismiss()
-                            },
-                            onFailure: { (error) in
-                                isLoading = false
-                                print(error)
-                            })
+                        register()
                     }, label: {
                         Text("Register")
                             .frame(maxWidth: .infinity, minHeight: 44)
@@ -61,18 +43,7 @@ struct LoginView: View {
                     .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.blue, lineWidth: 2.0))
                     
                     Button(action: {
-                        isLoading = true
-                        newsReaderApi.login(
-                            username: username,
-                            password: password,
-                            onSuccess: {
-                                isLoading = false
-                                self.presentationMode.wrappedValue.dismiss()
-                            },
-                            onFailure: { (error) in
-                                isLoading = false
-                                print(error)
-                            })
+                        login()
                     }, label: {
                         Text("Login")
                             .frame(maxWidth: .infinity, minHeight: 44)
@@ -85,6 +56,36 @@ struct LoginView: View {
         }
         .padding()
         .navigationTitle("Login")
+    }
+    
+    func login() {
+        isLoading = true
+        newsReaderApi.login(
+            username: username,
+            password: password,
+            onSuccess: {
+                isLoading = false
+                self.presentationMode.wrappedValue.dismiss()
+            },
+            onFailure: { (error) in
+                isLoading = false
+                print(error)
+            })
+    }
+    
+    func register() {
+        isLoading = true
+        newsReaderApi.register(
+            username: username,
+            password: password,
+            onSuccess: {
+                isLoading = false
+                self.presentationMode.wrappedValue.dismiss()
+            },
+            onFailure: { (error) in
+                isLoading = false
+                print(error)
+            })
     }
 }
 

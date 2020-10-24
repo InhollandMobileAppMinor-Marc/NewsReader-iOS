@@ -1,13 +1,6 @@
-//
-//  ArticleListItem.swift
-//  News Reader
-//
-//  Created by user180963 on 19/10/2020.
-//
-
 import SwiftUI
 
-struct ArticleListItem: View {
+struct ArticleListItemView: View {
     let newsReaderApi: NewsReaderApi
     
     let article: Article
@@ -38,24 +31,28 @@ struct ArticleListItem: View {
                 Image(systemName: "photo")
             }
         }.onAppear {
-            newsReaderApi.getImage(
-                ofImageUrl: article.image,
-                onSuccess: { image in
-                    self.imageLoadingStatus = .loaded(image)
-                },
-                onFailure: { error in
-                    debugPrint(error)
-                    print("Failure")
-                }
-            )
+            loadImage()
         }
+    }
+    
+    func loadImage() {
+        newsReaderApi.getImage(
+            ofImageUrl: article.image,
+            onSuccess: { image in
+                self.imageLoadingStatus = .loaded(image)
+            },
+            onFailure: { error in
+                debugPrint(error)
+                print("Failure")
+            }
+        )
     }
 }
 
 struct ArticleListItem_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ArticleListItem(
+            ArticleListItemView(
                 FakeNewsReaderApi.article,
                 api: FakeNewsReaderApi.getInstance()
             )

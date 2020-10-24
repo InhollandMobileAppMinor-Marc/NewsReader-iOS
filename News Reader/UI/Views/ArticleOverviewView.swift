@@ -52,7 +52,7 @@ struct ArticleOverviewView: View {
             case .loaded(let articles): ScrollView {
                 LazyVStack {
                     ForEach(articles) { article in
-                        ArticleListItem(article)
+                        ArticleListItemView(article)
                     }
                 }
             }
