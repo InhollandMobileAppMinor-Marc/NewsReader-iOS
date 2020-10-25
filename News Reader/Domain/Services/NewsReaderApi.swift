@@ -12,6 +12,12 @@ class NewsReaderApi : ObservableObject {
         onSuccess: @escaping (ArticleBatch) -> Void,
         onFailure: @escaping (RequestError) -> Void
     ) {}
+    
+    func getArticlesById(
+        id: Int,
+        onSuccess: @escaping (ArticleBatch) -> Void,
+        onFailure: @escaping (RequestError) -> Void
+    ) {}
 
     func login(
         username: String,

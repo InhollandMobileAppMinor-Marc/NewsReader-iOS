@@ -7,6 +7,12 @@ struct ArticleOverviewView: View {
     @State
     var articleLoadingStatus: LoadingStatus<[Article], RequestError> = .loading
     
+    @State
+    private var nextBatchId: Int? = nil
+    
+    @State
+    private var lastLoadingViewId: Int? = nil
+    
     private var navigationBarItemsWhenLoggedIn: some View {
         HStack(spacing: 16) {
             Button(action: {
@@ -48,7 +54,12 @@ struct ArticleOverviewView: View {
             case .loaded(let articles): ScrollView {
                 LazyVStack {
                     ForEach(articles) { article in
-                        ArticleListItemView(article)
+                        ArticleListItemView(article).onAppear {
+                            if(article.id == articles.last?.id && lastLoadingViewId != article.id) {
+                                lastLoadingViewId = article.id
+                                loadUpcomingArticles()
+                            }
+                        }
                     }
                 }
             }
@@ -71,11 +82,32 @@ struct ArticleOverviewView: View {
             onlyLikedArticles: false,
             onSuccess: { articleBatch in
                 articleLoadingStatus = .loaded(articleBatch.articles)
+                self.nextBatchId = articleBatch.nextId
             },
             onFailure: { error in
                 articleLoadingStatus = .error(error)
             }
         )
+    }
+    
+    func loadUpcomingArticles() {
+        if let nextId = nextBatchId {
+            newsReaderApi.getArticlesById(
+                id: nextId,
+                onSuccess: { (articleBatch) in
+                    switch articleLoadingStatus {
+                    case .loaded(let articles):
+                        articleLoadingStatus = .loaded(articles + articleBatch.articles)
+                    default: return
+                    }
+                    
+                    self.nextBatchId = articleBatch.nextId
+                },
+                onFailure: { error in
+                    debugPrint(error)
+                }
+            )
+        }
     }
 }
 

@@ -36,6 +36,17 @@ final class FakeNewsReaderApi : NewsReaderApi {
             nextId: nil
         ))
     }
+    
+    override func getArticlesById(
+        id: Int,
+        onSuccess: @escaping (ArticleBatch) -> Void,
+        onFailure: @escaping (RequestError) -> Void
+    ) {
+        onSuccess(ArticleBatch(
+            articles: (FakeNewsReaderApi.article.id == id ? [FakeNewsReaderApi.article] : []),
+            nextId: nil
+        ))
+    }
 
     override func login(
         username: String,

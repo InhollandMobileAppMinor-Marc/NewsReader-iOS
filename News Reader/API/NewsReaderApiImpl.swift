@@ -46,12 +46,31 @@ final class NewsReaderApiImpl : NewsReaderApi {
         let url = URL(string: "\(NewsReaderApiImpl.BASE_URL)/Articles" + (onlyLikedArticles ? "/liked" : ""))!
 
         var urlRequest = URLRequest(url: url)
-        if(accessToken != nil) {
-            urlRequest.addValue(accessToken!, forHTTPHeaderField: "x-authtoken")
+        if let token = accessToken {
+            urlRequest.addValue(token, forHTTPHeaderField: "x-authtoken")
         } else if(onlyLikedArticles) {
             /// Logged out users don't have any liked articles, so return an empty list
             onSuccess(ArticleBatch(articles: [], nextId: nil))
             return
+        }
+
+        apiRequestHandler.execute(
+            request: urlRequest,
+            onSuccess: onSuccess,
+            onFailure: onFailure
+        )
+    }
+    
+    override func getArticlesById(
+        id: Int,
+        onSuccess: @escaping (ArticleBatch) -> Void,
+        onFailure: @escaping (RequestError) -> Void
+    ) {
+        let url = URL(string: "\(NewsReaderApiImpl.BASE_URL)/Articles/\(id)?count=20")!
+
+        var urlRequest = URLRequest(url: url)
+        if let token = accessToken {
+            urlRequest.addValue(token, forHTTPHeaderField: "x-authtoken")
         }
 
         apiRequestHandler.execute(
