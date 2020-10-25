@@ -41,7 +41,9 @@ struct ArticleDetailsView: View {
                     .multilineTextAlignment(.leading)
                     .padding()
             }
-        }.onAppear {
+        }
+        .navigationTitle("Article")
+        .onAppear {
             loadImage()
         }
     }

@@ -1,42 +1,14 @@
 import SwiftUI
 
-struct ArticleOverviewView: View {
+struct FavouritesView: View {
     @ObservedObject
     var newsReaderApi: NewsReaderApi = NewsReaderApiImpl.getInstance()
     
     @State
     var articleLoadingStatus: LoadingStatus<[Article], RequestError> = .loading
-    
-    private var navigationBarItemsWhenLoggedIn: some View {
-        HStack(spacing: 16) {
-            Button(action: {
-                newsReaderApi.logout()
-            }, label: {
-                Image(systemName: "escape")
-            })
-            
-            NavigationLink(
-                destination: FavouritesView(
-                    newsReaderApi: newsReaderApi
-                ),
-                label: {
-                    Image(systemName: "star")
-                }
-            )
-        }
-    }
-    
-    private var navigationBarItemsWhenLoggedOut: some View {
-        NavigationLink(
-            destination: LoginView(),
-            label: {
-                Image(systemName: "person.crop.circle.fill.badge.plus")
-            }
-        )
-    }
-    
+
     var body: some View {
-        let main = VStack {
+        VStack {
             switch articleLoadingStatus {
             case .loading: ProgressView("Loading articles, please wait...")
             case .error(let error):
@@ -54,21 +26,15 @@ struct ArticleOverviewView: View {
             }
             }
         }
-        .navigationTitle("673915 - News Reader")
+        .navigationTitle("Favourites")
         .onAppear {
             loadArticles()
-        }
-        
-        if(newsReaderApi.isAuthenticated) {
-            main.navigationBarItems(trailing: navigationBarItemsWhenLoggedIn)
-        } else {
-            main.navigationBarItems(trailing: navigationBarItemsWhenLoggedOut)
         }
     }
     
     func loadArticles() {
         newsReaderApi.getArticles(
-            onlyLikedArticles: false,
+            onlyLikedArticles: true,
             onSuccess: { articleBatch in
                 articleLoadingStatus = .loaded(articleBatch.articles)
             },
@@ -79,10 +45,10 @@ struct ArticleOverviewView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct FavouritesView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ArticleOverviewView(newsReaderApi: FakeNewsReaderApi.getInstance())
+            FavouritesView(newsReaderApi: FakeNewsReaderApi.getInstance())
         }
     }
 }

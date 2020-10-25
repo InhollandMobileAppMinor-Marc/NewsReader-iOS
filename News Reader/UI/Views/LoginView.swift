@@ -15,11 +15,24 @@ struct LoginView: View {
     @State
     var isLoading = false
     
+    @State
+    var errorMessage: String? = nil
+    
     var body: some View {
         VStack {
             if(isLoading) {
                 ProgressView("Trying to login...")
             } else {
+                if let error = errorMessage {
+                    Text(error)
+                        .font(.body)
+                        .padding()
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .background(Color.red)
+                        .cornerRadius(8.0)
+                }
+                
                 TextField("Enter username", text: $username)
                     .padding()
                     .border(Color.black.opacity(0.2), width: 1)
@@ -69,7 +82,14 @@ struct LoginView: View {
             },
             onFailure: { (error) in
                 isLoading = false
-                print(error)
+                switch error {
+                case .urlError:
+                    errorMessage = "Invalid URL"
+                case .decodingError:
+                    errorMessage = "Invalid login data"
+                case .genericError:
+                    errorMessage = "Unknown error"
+                }
             })
     }
     
@@ -84,7 +104,18 @@ struct LoginView: View {
             },
             onFailure: { (error) in
                 isLoading = false
-                print(error)
+                switch error {
+                case .urlError:
+                    errorMessage = "Invalid URL"
+                case .decodingError:
+                    errorMessage = "Invalid registration data"
+                case .genericError(let err):
+                    if let apiError = err as? ApiError {
+                        errorMessage = apiError.message
+                    } else {
+                        errorMessage = "Unknown error"
+                    }
+                }
             })
     }
 }
