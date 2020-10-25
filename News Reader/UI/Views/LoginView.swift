@@ -35,12 +35,12 @@ struct LoginView: View {
                 
                 TextField("Enter username", text: $username)
                     .padding()
-                    .border(Color.black.opacity(0.2), width: 1)
+                    .border(Color.gray.opacity(0.5), width: 1)
                     .cornerRadius(3.0)
                 
                 SecureField("Enter password", text: $password)
                     .padding()
-                    .border(Color.black.opacity(0.2), width: 1)
+                    .border(Color.gray.opacity(0.5), width: 1)
                     .cornerRadius(3.0)
                 
                 HStack {
@@ -58,7 +58,7 @@ struct LoginView: View {
                     Button(action: {
                         login()
                     }, label: {
-                        Text("Login")
+                        Text("Log in")
                             .frame(maxWidth: .infinity, minHeight: 44)
                             .foregroundColor(.white)
                     })

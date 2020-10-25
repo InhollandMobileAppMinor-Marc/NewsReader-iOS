@@ -12,6 +12,7 @@
 		8B3DE98625406654003589BC /* NewsReaderApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3DE98525406654003589BC /* NewsReaderApi.swift */; };
 		8B3DE98D25406A1B003589BC /* FakeNewsReaderApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3DE98C25406A1B003589BC /* FakeNewsReaderApi.swift */; };
 		8B407FBA2545AABE008BCD04 /* FavouritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B407FB92545AABE008BCD04 /* FavouritesView.swift */; };
+		8B407FC52545B2E1008BCD04 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8B407FC72545B2E1008BCD04 /* Localizable.strings */; };
 		8B58F2AD254457CD008BD281 /* ArticleDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B58F2AC254457CD008BD281 /* ArticleDetailsView.swift */; };
 		8B899E9F2542F81900D5179D /* ApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B899E9E2542F81900D5179D /* ApiError.swift */; };
 		8B97E0ED2537370700372698 /* NewsReaderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B97E0EC2537370700372698 /* NewsReaderApp.swift */; };
@@ -37,9 +38,11 @@
 		8B3DE98525406654003589BC /* NewsReaderApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsReaderApi.swift; sourceTree = "<group>"; };
 		8B3DE98C25406A1B003589BC /* FakeNewsReaderApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeNewsReaderApi.swift; sourceTree = "<group>"; };
 		8B407FB92545AABE008BCD04 /* FavouritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesView.swift; sourceTree = "<group>"; };
+		8B407FC62545B2E1008BCD04 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		8B407FC92545B2E3008BCD04 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8B58F2AC254457CD008BD281 /* ArticleDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailsView.swift; sourceTree = "<group>"; };
 		8B899E9E2542F81900D5179D /* ApiError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiError.swift; sourceTree = "<group>"; };
-		8B97E0E92537370700372698 /* News Reader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "News Reader.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8B97E0E92537370700372698 /* News Reader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "News Reader.app"; path = "/Users/user180963/Documents/News Reader/build/Debug-iphoneos/News Reader.app"; sourceTree = "<absolute>"; };
 		8B97E0EC2537370700372698 /* NewsReaderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsReaderApp.swift; sourceTree = "<group>"; };
 		8B97E0EE2537370700372698 /* ArticleOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleOverviewView.swift; sourceTree = "<group>"; };
 		8B97E0F02537370800372698 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -143,17 +146,9 @@
 		8B97E0E02537370700372698 = {
 			isa = PBXGroup;
 			children = (
+				8B407FC72545B2E1008BCD04 /* Localizable.strings */,
 				8B97E0EB2537370700372698 /* News Reader */,
-				8B97E0EA2537370700372698 /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		8B97E0EA2537370700372698 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				8B97E0E92537370700372698 /* News Reader.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		8B97E0EB2537370700372698 /* News Reader */ = {
@@ -222,12 +217,13 @@
 			knownRegions = (
 				en,
 				Base,
+				nl,
 			);
 			mainGroup = 8B97E0E02537370700372698;
 			packageReferences = (
 				8B97E10025373A1C00372698 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 			);
-			productRefGroup = 8B97E0EA2537370700372698 /* Products */;
+			productRefGroup = 8B97E0E02537370700372698;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -242,6 +238,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8B97E0F42537370800372698 /* Preview Assets.xcassets in Resources */,
+				8B407FC52545B2E1008BCD04 /* Localizable.strings in Resources */,
 				8B97E0F12537370800372698 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -276,6 +273,18 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		8B407FC72545B2E1008BCD04 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8B407FC62545B2E1008BCD04 /* en */,
+				8B407FC92545B2E3008BCD04 /* nl */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		8B97E0F62537370800372698 /* Debug */ = {

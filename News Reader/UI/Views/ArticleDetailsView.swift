@@ -35,13 +35,13 @@ struct ArticleDetailsView: View {
                     .font(.title)
                     .multilineTextAlignment(.leading)
                     .padding()
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Text(article.summary)
                     .font(.body)
                     .multilineTextAlignment(.leading)
                     .padding()
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
         .navigationTitle("Article")
